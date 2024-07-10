@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const articlesSchema =new mongoose.Schema({
+const draftSchema =new mongoose.Schema({
 
     publishDate:{
         type:Date,
@@ -56,4 +56,4 @@ const articlesSchema =new mongoose.Schema({
 })
 
 
-module.exports= mongoose.model('Articles',articlesSchema);
+module.exports= mongoose.model('Draft',draftSchema);

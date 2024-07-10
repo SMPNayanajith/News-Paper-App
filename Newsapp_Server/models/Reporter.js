@@ -37,7 +37,19 @@ const reporterSchema =new mongoose.Schema({
         type:String,
         required:true
 
-    }
+    },
+    userID:{
+        type:String,
+        required:true 
+    },
+    articles : [{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'Articles'
+    }],
+    drafts:[{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'Draft'
+    }]
 
 })
 

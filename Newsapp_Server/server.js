@@ -18,6 +18,7 @@ require('./models/Reader');
 require('./models/Reporter');
 require('./models/AuthUser');
 require('./models/Articles');
+require('./models/Draft');
 
 
 // Routes

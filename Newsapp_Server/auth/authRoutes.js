@@ -4,8 +4,13 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const JWT = require('jsonwebtoken');
 const Reader = mongoose.model('Reader');
+const Draft = mongoose.model('Draft');
 const AuthUser = mongoose.model('AuthUser');
+const Articles = mongoose.model('Articles');
 const Reporter = mongoose.model('Reporter');
+const authMiddleware = require('../middleware/authMiddleware');
+const reporterMiddleware = require('../middleware/reporterMiddleware');
+
 
 require('dotenv').config();
 
@@ -14,7 +19,7 @@ require('dotenv').config();
 router.post('/add-new-reader', async (req, res) => {
     try {
         console.log('Data sent from client - ', req.body);
-        const { firstName, lastName, password, email } = req.body;
+        const { firstName, lastName, password, email,userID } = req.body;
 
         // Check if the email already exists
         const existsReader = await Reader.findOne({ email });
@@ -28,12 +33,13 @@ router.post('/add-new-reader', async (req, res) => {
             firstName,
             lastName,
             password: hashedPassword,
-            email
+            email,
+            userID
         });
         await reader.save();
 
         const authUser = new AuthUser({
-            userID: reader._id, // Use the Reader's _id as the userID
+            userID: reader.userID, 
             roleType: "reader",
             reader: reader._id
         });
@@ -49,7 +55,7 @@ router.post('/add-new-reader', async (req, res) => {
 router.post('/add-new-reporter', async (req, res) => {
     try {
         console.log('Data sent by client side-', req.body);
-        const { firstName, lastName, password, email, city, country, contactNumber } = req.body;
+        const { firstName, lastName, password, email, city, country, contactNumber, userID } = req.body;
 
         // Check if the email already exists
         const existsReporter = await Reporter.findOne({ email });
@@ -69,13 +75,14 @@ router.post('/add-new-reporter', async (req, res) => {
             email,
             city,
             country,
-            contactNumber
+            contactNumber,
+            userID
         });
 
         await reporter.save();
 
         const authUser = new AuthUser({
-            userID: reporter._id, // Use the Reporter's _id as the userID
+            userID: reporter.userID, 
             roleType: "reporter",
             reporter: reporter._id
         });
@@ -124,24 +131,153 @@ router.post('/user-login', async (req, res) => {
 
         //return data
         res.json({token,roleType});
-        console.log(`Logging as ${authUser.roleType}`);
+        console.log(`Logging as ${authUser.roleType}`); 
 
         
-
-        // const isPasswordValid = await bcrypt.compare(password, authUser.password);
-        // if (!isPasswordValid) {
-        //     return res.status(401).send({ error: 'Invalid password' });
-        // }
-
-        // const token = JWT.sign({ userID: authUser.userID }, process.env.JWT_SECRET, {
-        //     expiresIn: '1h'
-        // });
-
-        res.send({ message: 'Login successful', token });
     } catch (error) {
         console.log('Database error', error);
         return res.status(500).send({ error: error.message });
     }
+});
+
+/// create new article
+// router.post('/create-new-article',authMiddleware,reporterMiddleware , async (req,res)=>{
+//        const {articleType,newsHeading,newsDescription,newsDescriptionLong,city,country,coverImage} = req.body;
+//     try {
+//         const newArticles = new Articles({
+//             author:req.reporter._id,
+//             articleType,
+//             newsHeading,
+//             newsDescription,
+//             newsDescriptionLong,
+//             city,
+//             country,
+//             coverImage
+
+//         });
+
+//         const savedArticles = await newArticles.save();
+//         //update reporter article list
+//         req.reporter.articles.push(savedArticles_id)
+//         await req.reporter.save();
+//         res.status(201).json(savedArticles);
+
+
+        
+        
+//     } catch (error) {
+//         console.error('Error creating article',error);
+//         res.status(500).json({error:'Interna server error'});
+//     }
+  
+// });
+
+
+//creat new article v2
+
+router.post('/create-new-article',authMiddleware,reporterMiddleware , async (req,res)=>{
+    const {articleType,newsHeading,newsDescription,newsDescriptionLong,city,country,coverImage,publicationType} = req.body;
+
+    //validate publication type
+    if(![0,1,2].includes(publicationType)){
+        return res.status(400).json({error:'Invalid publication type'});
+
+    }
+
+
+ try {
+     const newArticles = new Articles({
+         author: req.reporter._id,
+         articleType,
+         newsHeading,
+         newsDescription,
+         newsDescriptionLong,
+         city,
+         country,
+         coverImage,
+         publicationType
+
+     });
+
+     const savedArticles = await newArticles.save();
+     //update reporter article list
+     req.reporter.articles.push(savedArticles._id)
+     await req.reporter.save();
+
+     if(publicationType===2){
+
+        const newDraft = new Draft({
+            author: req.reporter._id,
+            articleType,
+            newsHeading,
+            newsDescription,
+            newsDescriptionLong,
+            city,
+            country,
+            coverImage,
+            publicationType
+        });
+
+        const saveDraft = await newDraft.save();
+        req.reporter.drafts.push(saveDraft._id)
+
+        await req.reporter.save();
+        return res.status(201).json({message:'Draft saved successfully'});
+        
+     }
+     
+     res.status(201).json({message:'Article saved successfully'});
+
+    ///  res.status(201).json(savedArticles);
+
+
+     
+     
+ } catch (error) {
+     console.error('Error creating article',error);
+     res.status(500).json({error:'Interna server error'});
+ }
+
+});
+
+
+////delete article
+
+router.delete('/delete-article/:id',authMiddleware,reporterMiddleware, async (req,res)=>{
+    const articleId = req.params.id;
+
+
+    try {
+        const article = await Articles.findById(articleId);
+        //if article id not found
+        if(!articleId){
+            return  res.status(404).json({error:'Article not found'});
+        }
+        
+        //check if the requesting reporter it the author, avoid other reportrs delet others articles
+            if(article.author.toString() !== req.reporter._id.toString()){
+                return  res.status(403).json({error:'Not authorized to delete this artical'});
+            }
+
+            //delete the article
+            await Articles.findByIdAndDelete(articleId);
+
+            //delete draft
+            await Draft.findByIdAndDelete(articleId);
+
+            ///Remove the article/draft id from Reporter author
+            await Reporter.findByIdAndUpdate(req.reporter._id,{
+                $pull:{article :articleId,drafts: articleId}
+            });
+            res.status(201).json({message:'Article deleted successfully'});   
+
+
+
+    } catch (error) {
+        console.error('Error deleting article',error);
+        res.status(500).json({error:'Interna server error'});
+    }
+
 });
 
 module.exports = router;
