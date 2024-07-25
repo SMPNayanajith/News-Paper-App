@@ -9,7 +9,7 @@ const articlesSchema =new mongoose.Schema({
 
     },
     author:{
-        type:mongoose.Schema.ObjectId,
+        type:mongoose.Schema.Types.ObjectId,
         required:true,
         ref:"Reporter",
 

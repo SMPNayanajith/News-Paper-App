@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
-const JWT = require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
 const Reader = mongoose.model('Reader');
 const Draft = mongoose.model('Draft');
 const AuthUser = mongoose.model('AuthUser');
@@ -126,7 +126,7 @@ router.post('/user-login', async (req, res) => {
             {
                 return res.status(401).json({ error: 'Invalid password' });
             }
-        const token =JWT.sign({userID:authUser._id,roleType:authUser.roleType},process.env.JWT_SECRET,{expiresIn:'10m'});
+        const token =jwt.sign({userID:authUser._id,roleType:authUser.roleType},process.env.jwt_SECRET,{expiresIn:'10m'});
         const roleType = authUser.roleType;
 
         //return data
@@ -276,6 +276,93 @@ router.delete('/delete-article/:id',authMiddleware,reporterMiddleware, async (re
     } catch (error) {
         console.error('Error deleting article',error);
         res.status(500).json({error:'Interna server error'});
+    }
+
+});
+
+///Route to update DArticles and drafts
+
+router.put('/update-article/:id', authMiddleware,reporterMiddleware , async(req,res)=>{
+    const articleId = req.params.id;
+    const {articleType,newsHeading,newsDescription,newsDescriptionLong,city,country,coverImage,publicationType} = req.body;
+
+    //validate publication type
+    if(![0,1,2].includes(publicationType)){
+        return res.status(400).json({error:'Invalid publication type'});
+
+    }
+
+    
+    try {
+       const article = await Articles.findById(articleId) || await Draft.findById(articleId);
+
+       if(!article){
+        return res.status(403).json({error:'Article not found'})
+       }
+       //check requeating reporter is the author
+       if(article.author.toString() !== req.reporter._id.toString()){
+        return  res.status(403).json({error:'Not authorized to update this artical'});
+    }
+
+    ///update article field
+    article.articleType = articleType || article.articleType;
+    article.newsHeading = newsHeading || article.newsHeading;
+    article.newsDescription = newsDescription || article.newsDescription;
+    article.newsDescriptionLong = newsDescriptionLong || article.newsDescriptionLong;
+    article.city = city || article.city;
+    article.country = country || article.country;
+    article.coverImage = coverImage || article.coverImage;
+    article.publicationType = publicationType;
+
+    //save the article 
+    const updateArticle = await article.save();
+
+    //update draft
+    if(publicationType===2){
+        let draft = await Draft.findOne({author:req.reporter._id,_id:articleId});
+    
+    if(!draft){
+        draft = new Draft({
+            _id:articleId,
+            author:req.reporter._id,
+            articleType,
+            newsHeading,
+            newsDescription,
+            newsDescriptionLong,
+            city,
+            country,
+            coverImage,
+            publicationType
+        });
+    }
+    else{
+         ///update draft field
+    draft.articleType = articleType || draft.articleType;
+    draft.newsHeading = newsHeading || draft.newsHeading;
+    draft.newsDescription = newsDescription || draft.newsDescription;
+    draft.newsDescriptionLong = newsDescriptionLong || draft.newsDescriptionLong;
+    draft.city = city || draft.city;
+    draft.country = country || draft.country;
+    draft.coverImage = coverImage || draft.coverImage;
+    publicationType = publicationType;
+        
+    }
+    await draft.save();
+}
+else{
+    await Draft.findByIdAndDelete({author:req.reporter._id,_id:articleId});
+}
+
+res.status(200).json(updateArticle);
+
+
+
+ 
+    } catch (error) {
+        console.error('Error updating the article',error);
+        res.status(500).json({error:'Internal server error'});
+
+
     }
 
 });
