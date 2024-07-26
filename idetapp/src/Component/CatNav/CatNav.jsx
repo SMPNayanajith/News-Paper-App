@@ -8,7 +8,7 @@ function CatNav() {
     <div className='w-full  max-h-[56px] border-y-[1px] border-[#565656] border-opacity-25'>
       <ul className='w-full flex'>
         <li className='w-1/3'>
-            <div className='w-full px-2 bg-sky-800 flex justify-center items-center flex-row space-x-2 text-white'>
+            <div className=' w-full px-2 bg-sky-800 flex justify-center items-center flex-row space-x-2 text-white'>
             <span><FaBaseball/></span>
             <span>Sports</span>
 
