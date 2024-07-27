@@ -1,6 +1,7 @@
 import React from 'react'
 import { Form, Formik } from 'formik'
 import * as Yup from "yup"
+import CustomField from '../CustomField/CustomField';
 
 function Login() {
 
@@ -27,12 +28,15 @@ const handleLogin = console.log("login succeeded");
            initialValues={{
             userID:"",
             password:"",
+            
            }}
            validationSchema={loginSchema}
            onSubmit={handleLogin}
         >
             {({errors , touched, handleChange ,values})=>(
                 <Form className='flex flex-col mb-[56px] w-full '>
+                    <CustomField
+                    inputLabel={'User Name'}/>
                     
                 </Form>
             )}
