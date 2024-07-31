@@ -2,6 +2,8 @@ import React from 'react'
 import { Form, Formik } from 'formik'
 import * as Yup from "yup"
 import CustomField from '../CustomField/CustomField';
+import { FaUser } from "react-icons/fa";
+import InputPassword from '../InputPassword/InputPassword';
 
 function Login() {
 
@@ -36,7 +38,20 @@ const handleLogin = console.log("login succeeded");
             {({errors , touched, handleChange ,values})=>(
                 <Form className='flex flex-col mb-[56px] w-full '>
                     <CustomField
-                    inputLabel={'User Name'}/>
+                    fieldType={"text"}
+                    inputLabel={'User Name'}
+                    fieldName={"UserID"}
+                    fieldValue={values}
+                    icon={FaUser}
+                    handleChange={handleChange}/>
+
+                    <InputPassword
+                    label="Password"
+                    name="password"
+                    handleChange={handleChange}
+                    values={values}
+                    />
+                    
                     
                 </Form>
             )}
