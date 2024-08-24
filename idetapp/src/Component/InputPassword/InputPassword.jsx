@@ -1,7 +1,8 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { IoMdLock } from "react-icons/io";
 import { FaRegEyeSlash } from "react-icons/fa";
 import { Field, ErrorMessage } from 'formik'
+import { IoEyeOutline } from "react-icons/io5";
 
 function InputPassword({
     label,
@@ -10,7 +11,13 @@ function InputPassword({
     handleChange
  }) {
 
-   
+   const [passwordVisible, setPasswordVisible] = useState(false);
+
+   const togglePassword=() =>{
+    setPasswordVisible(!passwordVisible)
+
+   }
+
     return (
 
         <div className='flex flex-col sm:mt-5 mt-2 w-full space-y-2'>
@@ -30,7 +37,7 @@ function InputPassword({
 
                 <Field
 
-                    type="password"
+                    type={passwordVisible ? "text" : "password"}
                     name={name}
                     onChange={handleChange}
                     placeholder={name}
@@ -39,9 +46,15 @@ function InputPassword({
                     className='w-full h-full p-2 bg-transparent outline-none text-[#1a1a1a] text-[12px] '
                 />
                 <div className='h-[38px] w-[38px] rounded-br-[6px] rounded-tr-[6px] justify-center items-center flex '>
-                    <span className='text-[16px] text-black '>
-                        <FaRegEyeSlash />
-                    </span>
+                    {passwordVisible ? (
+                        <span className='cursor-pointer text-[16px] text-black ' onClick={togglePassword}>
+                            <FaRegEyeSlash />
+                        </span>) : (
+                        <span className='cursor-pointer text-[16px] text-black ' onClick={togglePassword}>
+                             < IoEyeOutline/>
+                        </span>    
+                        )}
+                   
                 </div>
             </div>
             <ErrorMessage name={name} component="span" className=' text-red-500 text-12px]' />
