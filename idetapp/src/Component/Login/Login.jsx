@@ -66,7 +66,7 @@ const handleLogin = async(values)=>{
                     <CustomField
                     fieldType={"text"}
                     inputLabel={'User Name'}
-                    fieldName={"UserID"}
+                    fieldName={"userID"}
                     fieldValue={values}
                     icon={FaUser}
                     handleChange={handleChange}/>

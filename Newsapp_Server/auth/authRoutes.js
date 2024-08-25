@@ -363,7 +363,7 @@ router.put('/update-article/:id', authMiddleware, reporterMiddleware, async(req,
 
 ////////////get user Details
 
-router.get('user-details', authMiddleware, async(res, req) => {
+router.get('/user-details', authMiddleware, async(req, res) => {
     try {
 
         const { userId, roleType } = req.authUser
@@ -391,7 +391,7 @@ router.get('user-details', authMiddleware, async(res, req) => {
         res.json(userDetails)
 
     } catch {
-        return res.status(404).json({ error: 'User details not found' });
+        console.error("Error fetching user details");
     }
 });
 
