@@ -5,7 +5,11 @@ const bodyparser = require('body-parser');
 const cors = require('cors');
 
 app.use(bodyparser.json());
-app.use(cors());
+
+const corsOptions = {
+    origin: 'http://localhost:3000', // Allow request frrom your frontend
+}
+app.use(cors(corsOptions));
 
 // Start the server
 app.listen(port, () => {

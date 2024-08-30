@@ -9,7 +9,7 @@ function NavBar() {
         <div className="w-full md:w-/ mx-auto h-[56px] flex flex-row justify-between items-center px-5 ">
             <div></div>
             <div>
-                <Link to="/login">
+                <Link to="/user-login">
                     <span className='cursor-pointer hover:text-purple-500 font-medium ' >Login </span>
                 </Link>
                 

@@ -15,6 +15,7 @@ const reporterMiddleware = require('../middleware/reporterMiddleware');
 require('dotenv').config();
 
 // Routing using async/await
+//add new reader route
 
 router.post('/add-new-reader', async(req, res) => {
     try {
@@ -24,7 +25,7 @@ router.post('/add-new-reader', async(req, res) => {
         // Check if the email already exists
         const existsReader = await Reader.findOne({ email });
         if (existsReader) {
-            return res.status(422).send({ error: 'Email already exists' });
+            return res.status(422).send({ error: 'Email already exists', success: false });
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -44,7 +45,7 @@ router.post('/add-new-reader', async(req, res) => {
             reader: reader._id
         });
         await authUser.save();
-        res.send({ message: 'Reader registered successfully' });
+        res.send({ message: 'Reader registered successfully', success: true });
     } catch (error) {
         console.log('Database error', error);
         return res.status(422).send({ error: error.message });
@@ -122,7 +123,7 @@ router.post('/user-login', async(req, res) => {
         if (!isMatch) {
             return res.status(401).json({ error: 'Invalid password' });
         }
-        const token = jwt.sign({ userID: authUser._id, roleType: authUser.roleType }, process.env.jwt_SECRET, { expiresIn: '10m' });
+        const token = jwt.sign({ userID: authUser._id, roleType: authUser.roleType }, process.env.JWT_SECRET, { expiresIn: '10m' });
         const roleType = authUser.roleType;
 
         //return data
