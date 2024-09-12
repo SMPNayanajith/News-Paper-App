@@ -1,9 +1,10 @@
 import React from 'react'
+import CreateArticle from './CreateArticle'
 
 function NewsLog() {
   return (
     <div className='w-full justify-center flex h-screen'>
-      <div>reporter</div>
+      <CreateArticle/>
     </div>
   )
 }

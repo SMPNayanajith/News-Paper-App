@@ -60,7 +60,7 @@ const directLogin =()=>{
 
   return (
     
-    <div className='overflow-hidden w-full flex flex-col justify-center items-center bg-white h-screen'>
+    <div className='overflow-hidden w-full flex flex-col justify-center items-center bg-white'>
       <div className='max-w-[800px] flex flex-col p-5 items-center mx-auto w-full '>
         <div className='app-logo flex flex-col justify-center items-center'>
             <span className='text-[64px] text-[#627BFE] '>News@Live</span>

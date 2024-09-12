@@ -25,10 +25,16 @@ const handleLogin = async(values)=>{
   try {
     const response = await axios.post("http://localhost:3001/auth/user-login",values);
     if(response.data){
-      console.log(`Login successfull, Role: ${response?.data?.roleType}`)
-      if(response.data.roleType==='reader'){
+      
+      const {token,roleType} = response.data;
+
+      //save token to localstorage
+      localStorage.setItem('authToken',token);
+      console.log(`Login successfull, Role: ${roleType}`);
+
+      if(roleType==='reader'){
         navigate('/reader');
-      }else if(response.data.roleType === 'reporter'){
+      }else if(roleType === 'reporter'){
         navigate('/reporter')
       }
       

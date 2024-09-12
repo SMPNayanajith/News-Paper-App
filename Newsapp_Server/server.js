@@ -3,6 +3,8 @@ const app = express();
 const port = process.env.PORT || 3001;
 const bodyparser = require('body-parser');
 const cors = require('cors');
+const path = require('path');
+
 
 app.use(bodyparser.json());
 
@@ -10,6 +12,9 @@ const corsOptions = {
     origin: 'http://localhost:3000', // Allow request frrom your frontend
 }
 app.use(cors(corsOptions));
+
+//serve files from the upload directory
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Start the server
 app.listen(port, () => {

@@ -10,6 +10,9 @@ const Articles = mongoose.model('Articles');
 const Reporter = mongoose.model('Reporter');
 const authMiddleware = require('../middleware/authMiddleware');
 const reporterMiddleware = require('../middleware/reporterMiddleware');
+const multer = require("multer");
+const path = require("path");
+const { error } = require('console');
 
 
 require('dotenv').config();
@@ -101,6 +104,7 @@ router.post('/user-login', async(req, res) => {
     try {
         const { userID, password } = req.body;
         const authUser = await AuthUser.findOne({ userID });
+
         if (!authUser) {
             return res.status(401).json({ error: 'User not found' });
         }
@@ -170,10 +174,30 @@ router.post('/user-login', async(req, res) => {
 // });
 
 
+//setup multer for  storage
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, "uploads/");
+    },
+    fileName: (req, file, cb) => {
+        cb(null, `${Date.now()}-${file.originalname}`);
+    },
+
+});
+const upload = multer({ storage: storage });
+
+
 //creat new article v2
 
 router.post('/create-new-article', authMiddleware, reporterMiddleware, async(req, res) => {
-    const { articleType, newsHeading, newsDescription, newsDescriptionLong, city, country, coverImage, publicationType } = req.body;
+    const { articleType, newsHeading, newsDescription, newsDescriptionLong, city, country } = req.body;
+    const publicationType = parseInt(req.body.publicationType, 10);
+
+    const coverImage = req.file ? req.file.path : null;
+
+    if (!coverImage) {
+        return res.status(400).json({ error: 'Cover image is required' });
+    }
 
     //validate publication type
     if (![0, 1, 2].includes(publicationType)) {
@@ -219,7 +243,7 @@ router.post('/create-new-article', authMiddleware, reporterMiddleware, async(req
             req.reporter.drafts.push(saveDraft._id)
 
             await req.reporter.save();
-            return res.status(201).json({ message: 'Draft saved successfully' });
+            return res.status(201).json({ message: 'Draft saved successfully', success: true });
 
         }
 
@@ -394,6 +418,25 @@ router.get('/user-details', authMiddleware, async(req, res) => {
     } catch {
         console.error("Error fetching user details");
     }
+});
+
+//fetch articles
+
+router.get('/fetch-articles', async(req, res) => {
+    try {
+        //filter latest article by date
+        const latestArticle = await Articles.find().sort({ publishDate: -1 }).limit(3);
+
+        //fetch all articles
+        const allAticles = await Articles.find().sort({ publishDate: -1 });
+        res.status(200).json({ latestArticle, allAticles });
+
+
+    } catch (error) {
+        console.error('Error fetching articles', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+
 });
 
 
