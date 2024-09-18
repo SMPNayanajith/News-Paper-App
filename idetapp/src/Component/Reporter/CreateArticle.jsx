@@ -3,7 +3,6 @@ import { Form, Formik,setFieldValue } from 'formik'
 import * as Yup from "yup"
 import CustomField from '../CustomField/CustomField';
 import { FaUser } from "react-icons/fa";
-import InputPassword from '../InputPassword/InputPassword';
 import config from '../../config';
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
@@ -38,9 +37,10 @@ const handleCreateArticle= async (values, {resetForm})=>{
     try{
        // check token
        const token = localStorage.getItem("token");
+       
 
        ///create form data
-       const formData = new formData();
+       const formData = new FormData();
        for (const key in values){
         formData.append(key,values[key])
        }
@@ -160,7 +160,7 @@ const handleCreateArticle= async (values, {resetForm})=>{
                     fieldValue={values.coverImage}
                     icon={FaUser}
                     handleChange={(event)=>{
-                        setFieldValue("coverImage", event.currrentTarget.files[0]);
+                        setFieldValue("coverImage", event.currentTarget.files[0]);
                     }}/>
 
                     <div className='my-3'>   

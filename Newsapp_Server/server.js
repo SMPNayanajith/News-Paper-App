@@ -4,6 +4,7 @@ const port = process.env.PORT || 3001;
 const bodyparser = require('body-parser');
 const cors = require('cors');
 const path = require('path');
+const fs = require('fs');
 
 
 app.use(bodyparser.json());
@@ -14,7 +15,14 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 //serve files from the upload directory
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+// app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+//make sure u have upload fokder
+const uploadDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir)
+}
+app.use('/uploads', express.static((uploadDir)));
 
 // Start the server
 app.listen(port, () => {

@@ -8,9 +8,12 @@ import config from '../../config';
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 import Button from '../Button/Button';
+import { useSetRecoilState } from 'recoil';
+import { userState } from '../../recoil/userState';
 
 
 function Login() {
+  const setUser = useSetRecoilState(userState);
   const navigate = useNavigate();
   console.log('config.baseUrl',config.baseUrl)
   
@@ -32,8 +35,14 @@ const handleLogin = async(values)=>{
       localStorage.setItem('authToken',token);
       console.log(`Login successfull, Role: ${roleType}`);
 
+      setUser({
+        isLoggedIn:true,
+        userName:values.userName,
+        roleType:roleType,
+      })
+
       if(roleType==='reader'){
-        navigate('/reader');
+        navigate('/');
       }else if(roleType === 'reporter'){
         navigate('/reporter')
       }
@@ -48,7 +57,7 @@ const handleLogin = async(values)=>{
   }
 
 }
-const jj =()=>{
+const registrationHandle =()=>{
   navigate('/registration')
   
 }
@@ -93,7 +102,7 @@ const jj =()=>{
 
         </Formik>
         <span className='texxt-[14px] text-gray-800   '>Don't have an account? 
-          <span className='text-blue-600 cursor-pointer ' onClick={jj} >Register now</span> </span>
+          <span className='text-blue-600 cursor-pointer ' onClick={registrationHandle} >Register now</span> </span>
 
       </div>
     </div>

@@ -3,10 +3,57 @@ import NavBar from '../NavBar/NavBar'
 import LatestNewsLayout from '../Layout/LatestNewsLayout'
 import CatNav from '../CatNav/CatNav'
 import CommonNews from '../Layout/CommonNews'
-
-
+import { useEffect } from "react";
+import axios from "axios";
+import { useSetRecoilState } from "recoil";
+import { jwtDecode } from 'jwt-decode';
+import { userState } from '../../recoil/userState'
 
 function Home() {
+  const setUser = useSetRecoilState(userState)
+
+  const fetchUserDetails = async () => {
+
+    const token = localStorage.getItem('authToken');
+    if (token) {
+      try {
+        //decode the token to get user details
+        const decordedToken = jwtDecode(token);
+        const { userId, roleType } = decordedToken;
+        //then fetch user details
+
+        const response = await axios.get("http://localhost:3001/auth/user-details", {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+
+        console.log("response.data", response.data);
+        const userDetails = response.data;
+
+        setUser({
+          isLoggedIn: true,
+          userName: userDetails.firstName,
+          roleType: roleType,
+        })
+
+
+
+      } catch (error) {
+        console.error("Error fetching user data", error);
+      }
+    }
+
+
+
+  }
+
+    useEffect(() => {
+      fetchUserDetails();
+
+    }, [setUser])
+
+
   return (
     <div className=' '>
       <NavBar/>

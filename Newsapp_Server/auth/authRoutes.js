@@ -142,6 +142,7 @@ router.post('/user-login', async(req, res) => {
 });
 
 /// create new article
+
 // router.post('/create-new-article',authMiddleware,reporterMiddleware , async (req,res)=>{
 //        const {articleType,newsHeading,newsDescription,newsDescriptionLong,city,country,coverImage} = req.body;
 //     try {
@@ -179,7 +180,7 @@ const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, "uploads/");
     },
-    fileName: (req, file, cb) => {
+    filename: (req, file, cb) => {
         cb(null, `${Date.now()}-${file.originalname}`);
     },
 
@@ -193,7 +194,7 @@ router.post('/create-new-article', authMiddleware, reporterMiddleware, async(req
     const { articleType, newsHeading, newsDescription, newsDescriptionLong, city, country } = req.body;
     const publicationType = parseInt(req.body.publicationType, 10);
 
-    const coverImage = req.file ? req.file.path : null;
+    const coverImage = req.file ? `uploads/${req.file.filename}` : null;
 
     if (!coverImage) {
         return res.status(400).json({ error: 'Cover image is required' });
@@ -391,7 +392,7 @@ router.put('/update-article/:id', authMiddleware, reporterMiddleware, async(req,
 router.get('/user-details', authMiddleware, async(req, res) => {
     try {
 
-        const { userId, roleType } = req.authUser
+        const { userId, roleType } = req.authUser; //ensure authmiddleware set these correctly
         const authUser = await AuthUser.findById(userId);
 
 
@@ -401,9 +402,9 @@ router.get('/user-details', authMiddleware, async(req, res) => {
         let userDetails;
 
         if (roleType === 'reader') {
-            userDetails = await Reader.findById(authUser.reader)
+            userDetails = await Reader.findById(authUser.reader);
         } else if (roleType === 'reporter') {
-            userDetails = await Reporter.findById(authUser.reporter)
+            userDetails = await Reporter.findById(authUser.reporter);
         } else {
             return res.status(404).json({ error: 'Invalid role type' });
         }
@@ -416,7 +417,7 @@ router.get('/user-details', authMiddleware, async(req, res) => {
         res.json(userDetails)
 
     } catch {
-        console.error("Error fetching user details");
+        console.error("Error fetching user details", error);
     }
 });
 
