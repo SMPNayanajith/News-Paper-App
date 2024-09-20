@@ -11,12 +11,12 @@
                 req.reporter = authUser.reporter;
                 next();
             } else {
-                res.status(403).json({ error: 'Access denieded, Only reporters can create articles' });
+                res.status(403).json({ error: 'Access denied, Only reporters can create articles' });
             }
 
         } catch (error) {
             console.error('Reporter Middleware error', error);
-            res.status(500).json({ error: 'Interna server error' });
+            res.status(500).json({ error: 'Internal server error' });
 
         }
     }

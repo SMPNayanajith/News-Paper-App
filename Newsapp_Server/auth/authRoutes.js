@@ -416,7 +416,7 @@ router.get('/user-details', authMiddleware, async(req, res) => {
 
         res.json(userDetails)
 
-    } catch {
+    } catch (error) {
         console.error("Error fetching user details", error);
     }
 });

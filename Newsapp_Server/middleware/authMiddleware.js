@@ -15,13 +15,12 @@ const authMiddleware = (req, res, next) => {
 
     //if found
     try {
-
         const decode = jwt.verify(token, process.env.JWT_SECRET);
         req.authUser = { userId: decode.userId, roleType: decode.roleType };
         next();
-
     } catch (error) {
-        console.error('authentication error', error)
+        console.error('authentication error', error);
+        return res.status(401).json({ message: 'Authentication failed' });
     }
 
 }
