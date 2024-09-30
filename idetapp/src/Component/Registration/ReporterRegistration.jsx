@@ -10,7 +10,8 @@ import { useNavigate } from "react-router-dom";
 import Button from '../Button/Button';
 import { IoIosMail } from "react-icons/io";
 
-function Registration() {
+function ReporterRegistration() {
+
     const [apiError,setApiError]=useState("");
     const [apiSuccess,setApiSuccess]=useState("");
 
@@ -18,22 +19,25 @@ function Registration() {
   console.log('config.baseUrl',config.baseUrl);
   
 
-const ReaderSchema = Yup.object().shape({
+const ReporterSchema = Yup.object().shape({
     userID :Yup.string().required("Required"),
     password :Yup.string().min(8,"Minimum 8 characters").required("Required"),
     firstName:Yup.string().required("Required"),
     lastName:Yup.string().required("Required"), 
     email:Yup.string().email().required("Required"), 
+    city:Yup.string().required("Required"), 
+    country:Yup.string().required("Required"), 
+    contactNumber:Yup.number().required("Required"), 
    
 });
 
 
 
-const registerReader= async (values, {resetForm})=>{
+const registerReporter= async (values, {resetForm})=>{
     setApiError("");
     setApiSuccess("");
     try{
-        const response = await axios.post("http://localhost:3001/auth/add-new-reader" ,values)
+        const response = await axios.post("http://localhost:3001/auth/add-new-reporter" ,values)
         if(response.data.success){
             setApiError("");
             setApiSuccess(response.data.message);
@@ -57,8 +61,7 @@ const directLogin =()=>{
     navigate("/user-login")
     
 }
-
-  return (
+return (
     
     <div className='overflow-hidden w-full flex flex-col justify-center items-center bg-white'>
       <div className='max-w-[800px] flex flex-col p-5 items-center mx-auto w-full '>
@@ -73,11 +76,15 @@ const directLogin =()=>{
             lastName:"", 
             password:"", 
             email:"", 
-            userID:""
+            userID:"",
+            city:"",
+            country:"",
+            contactNumber:"",
+           
             
            }}
-           validationSchema={ReaderSchema}
-           onSubmit={registerReader}
+           validationSchema={ReporterSchema}
+           onSubmit={registerReporter}
         >
             {({errors , touched, handleChange ,values})=>(
                 <Form className='flex flex-col mb-[24px] w-full '>
@@ -97,6 +104,21 @@ const directLogin =()=>{
                     icon={FaUser}
                     handleChange={handleChange}/>
 
+<CustomField
+                    fieldType={"text"}
+                    inputLabel={'userID'}
+                    fieldName={"userID"}
+                    fieldValue={values}
+                    icon={FaUser}
+                    handleChange={handleChange}/>
+
+<InputPassword
+                    label="Password"
+                    name="password"
+                    handleChange={handleChange}
+                    values={values}
+                    />
+
                     <CustomField
                     fieldType={"email"}
                     inputLabel={'email'}
@@ -105,20 +127,31 @@ const directLogin =()=>{
                     icon={IoIosMail}
                     handleChange={handleChange}/>
 
-                    <CustomField
+<CustomField
                     fieldType={"text"}
-                    inputLabel={'userID'}
-                    fieldName={"userID"}
+                    inputLabel={'City'}
+                    fieldName={"city"}
                     fieldValue={values}
                     icon={FaUser}
                     handleChange={handleChange}/>
 
-                    <InputPassword
-                    label="Password"
-                    name="password"
-                    handleChange={handleChange}
-                    values={values}
-                    />
+ <CustomField
+                    fieldType={"text"}
+                    inputLabel={'Country'}
+                    fieldName={"country"}
+                    fieldValue={values}
+                    icon={FaUser}
+                    handleChange={handleChange}/>
+
+<CustomField
+                    fieldType={"number"}
+                    inputLabel={'ContactNumber'}
+                    fieldName={"contactNumber"}
+                    fieldValue={values}
+                    icon={FaUser}
+                    handleChange={handleChange}/>
+
+                   
 
                     <Button type={"submit"} buttonLabel={"Register"} />
                 </Form>
@@ -132,6 +165,7 @@ const directLogin =()=>{
       </div>
     </div>
   )
+
 }
 
-export default Registration
+export default ReporterRegistration

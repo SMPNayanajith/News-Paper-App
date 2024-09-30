@@ -15,6 +15,7 @@ const path = require("path");
 const { error } = require('console');
 
 
+
 require('dotenv').config();
 
 // Routing using async/await
@@ -127,7 +128,7 @@ router.post('/user-login', async(req, res) => {
         if (!isMatch) {
             return res.status(401).json({ error: 'Invalid password' });
         }
-        const token = jwt.sign({ userID: authUser._id, roleType: authUser.roleType }, process.env.JWT_SECRET, { expiresIn: '10m' });
+        const token = jwt.sign({ userId: authUser._id, roleType: authUser.roleType }, process.env.JWT_SECRET, { expiresIn: '10m' });
         const roleType = authUser.roleType;
 
         //return data
@@ -420,6 +421,55 @@ router.get('/user-details', authMiddleware, async(req, res) => {
         console.error("Error fetching user details", error);
     }
 });
+
+///filter articles
+
+// router.get('/filter-articles', async(req, res) => {
+
+//     const { type } = req.query ///extract article type from query parameter
+
+
+//     try {
+//         const artical = await Articles.find({ articleType: type }).sort({ publishDate: -1 });
+//         res.status(200).json({ artical });
+
+//     } catch (error) {
+//         console.error("Error fetching article by type", error);
+//         res.status(500).json({ error: "Internal server error" });
+//     }
+
+
+// })
+
+router.get('/filter-articles', async(req, res) => {
+
+    const { type } = req.query ///extract article type from query parameter
+
+
+
+    try {
+        const artical = await Articles.find({ articleType: type })
+            .sort({ publishDate: -1 })
+            .populate({
+                path: 'author',
+                select: 'firstName lastName'
+            });
+        ////map aarticles with author name
+        const articleAuthorName = artical.map(article => ({
+            ...article._doc,
+            author: `${article.author.firstName} ${article.author.lastName}`
+        }));
+
+
+        res.status(200).json({ artical: articleAuthorName });
+
+    } catch (error) {
+        console.error("Error fetching article by type", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+
+
+})
 
 //fetch articles
 

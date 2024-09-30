@@ -61,6 +61,9 @@ const registrationHandle =()=>{
   navigate('/registration')
   
 }
+const registrationHandlReporter = ()=>{
+  navigate('/ReporterRegistration');
+}
   return (
     
     <div className='overflow-hidden w-full flex flex-col justify-center items-center bg-white h-screen'>
@@ -101,8 +104,10 @@ const registrationHandle =()=>{
             )}
 
         </Formik>
-        <span className='texxt-[14px] text-gray-800   '>Don't have an account? 
-          <span className='text-blue-600 cursor-pointer ' onClick={registrationHandle} >Register now</span> </span>
+        <span className='texxt-[14px] text-gray-800   '>Don't have an account? Register below <br/>
+          <span className='text-blue-600 cursor-pointer ' onClick={registrationHandle} >Register now as a reader</span> <br/>
+          <span className='text-blue-600 cursor-pointer ' onClick={registrationHandlReporter} >Register now as a reporter</span>
+        </span>
 
       </div>
     </div>

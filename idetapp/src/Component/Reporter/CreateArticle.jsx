@@ -24,7 +24,7 @@ const ArrticleSchema = Yup.object().shape({
     newsDescriptionLong:Yup.string().required("Required"),
     city:Yup.string().required("Required"),  
     country:Yup.string().required("Required"),  
-    coverImage:Yup.string().required("Required"),  
+    // coverImage:Yup.mixed().required("Required"),  
     publicationType: Yup.number().oneOf([1, 2, 3],"Invalid publication type").required("Required"),  
    
 });
@@ -36,7 +36,11 @@ const handleCreateArticle= async (values, {resetForm})=>{
    setApiSuccess("");
     try{
        // check token
-       const token = localStorage.getItem("token");
+       const token = localStorage.getItem("authToken");
+       if (!token) {
+        console.error("No auth token found, please log in.");
+        return; // Optionally redirect to login page
+    }
        
 
        ///create form data
@@ -107,7 +111,7 @@ const handleCreateArticle= async (values, {resetForm})=>{
                             <option value="Sport" label='Sport'/>
                             <option value="Health" label='Health'/>
                             <option value="Political" label='Political'/>
-                            <option value="Education" label='Education'/>
+                            <option value="Educational" label='Educational'/>
                             <option value="Criminal" label='Criminal'/>
                             <option value="Accident" label='Accident'/>
                          </select>

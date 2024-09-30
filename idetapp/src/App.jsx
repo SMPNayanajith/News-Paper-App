@@ -9,6 +9,7 @@ import config from "./config";
 import { useSetRecoilState } from "recoil";
 import { userState } from "./recoil/userState";
 import { useEffect } from "react";
+import ReporterRegistration from "./Component/Registration/ReporterRegistration";
 
 
 function App() {
@@ -66,6 +67,7 @@ function App() {
           {/* <Route path="/reader" element={<NewsFeed />} ></Route> */}
           <Route path="/reporter" element={<NewsLog />} ></Route>
           <Route path="/registration" element={<Registration />} ></Route>
+          <Route path="/ReporterRegistration" element={<ReporterRegistration />} ></Route>
         </Routes>
       </BrowserRouter>
       {/* <RecoilTest/>

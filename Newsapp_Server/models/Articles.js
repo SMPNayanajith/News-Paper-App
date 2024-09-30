@@ -1,59 +1,59 @@
 const mongoose = require('mongoose');
 
-const articlesSchema =new mongoose.Schema({
+const articlesSchema = new mongoose.Schema({
 
-    publishDate:{
-        type:Date,
-        required:true,
-        default:Date.now,
-
-    },
-    author:{
-        type:mongoose.Schema.Types.ObjectId,
-        required:true,
-        ref:"Reporter",
+    publishDate: {
+        type: Date,
+        required: true,
+        default: Date.now,
 
     },
-    articleType:{
-        type:String,
-        enum:['General','Sport','Health','Political','Educational','Criminal','Accident'],
-        required:true,
+    author: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: "Reporter",
 
     },
-    
-    newsHeading:{
-        type:String,
-        required:true
+    articleType: {
+        type: String,
+        enum: ['General', 'Sport', 'Health', 'Political', 'Educational', 'Criminal', 'Accident'],
+        required: true,
+
     },
-    newsDescription:{
-        type:String,
-        required:true
+
+    newsHeading: {
+        type: String,
+        required: true
     },
-    newsDescriptionLong:{
-        type:String,
-        required:true
+    newsDescription: {
+        type: String,
+        required: true
     },
-    city:{
-        type:String,
-        required:true
+    newsDescriptionLong: {
+        type: String,
+        required: true
     },
-    country:{
-        type:String,
-        required:true
+    city: {
+        type: String,
+        required: true
     },
-    coverImage:{
-        type:String,
-        required:true
+    country: {
+        type: String,
+        required: true
     },
-    publicationType:{
-        type:Number,
-        enum:[0,1,2],
-        required:true,
-        
+    coverImage: {
+        type: String,
+        required: true
+    },
+    publicationType: {
+        type: Number,
+        enum: [0, 1, 2],
+        required: true,
+
 
     }
 
 })
 
 
-module.exports= mongoose.model('Articles',articlesSchema);
+module.exports = mongoose.model('Articles', articlesSchema);
