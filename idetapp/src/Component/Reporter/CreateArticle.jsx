@@ -8,7 +8,6 @@ import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 import Button from '../Button/Button';
 
-
 function CreateArticle() {
     const [apiError,setApiError]=useState("");
     const [apiSuccess,setApiSuccess]=useState("");
@@ -67,7 +66,12 @@ const handleCreateArticle= async (values, {resetForm})=>{
         console.log('Error creating areticle :', error);
         setApiError(error.response?.data?.error || "Something went wrong");
     }
+
 };
+
+const toTheNewsPage = ()=>{
+    navigate('/')
+}
 
 
   return (
@@ -76,6 +80,8 @@ const handleCreateArticle= async (values, {resetForm})=>{
       <div className='max-w-[800px] flex flex-col p-5 items-center mx-auto w-full '>
         <div className='app-logo flex flex-col justify-center items-center'>
             <span className='text-[64px] text-[#627BFE] '>News@Live</span>
+            <button onClick={toTheNewsPage}> <span className='font-semibold'>To the news page</span></button>
+           
             <span className='text-[18px] text-[#262626] '>Create new article</span>
         </div>
 
@@ -195,6 +201,7 @@ const handleCreateArticle= async (values, {resetForm})=>{
         </Formik>
         
       </div>
+      
     </div>
   )
 }

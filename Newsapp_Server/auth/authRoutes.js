@@ -16,6 +16,7 @@ const { error } = require('console');
 
 
 
+
 require('dotenv').config();
 
 // Routing using async/await
@@ -191,7 +192,7 @@ const upload = multer({ storage: storage });
 
 //creat new article v2
 
-router.post('/create-new-article', authMiddleware, reporterMiddleware, async(req, res) => {
+router.post('/create-new-article', authMiddleware, reporterMiddleware, upload.single('coverImage'), async(req, res) => {
     const { articleType, newsHeading, newsDescription, newsDescriptionLong, city, country } = req.body;
     const publicationType = parseInt(req.body.publicationType, 10);
 
@@ -489,6 +490,26 @@ router.get('/fetch-articles', async(req, res) => {
     }
 
 });
+
+
+// Fetch articles for the logged-in reporter (owner)
+router.post('/fetch-article-details', async(req, res) => {
+    try {
+        const { articleIds } = req.body;
+
+        // Find all articles that match the given IDs
+        const articles = await Articles.find({
+            _id: { $in: articleIds }
+        });
+
+        res.status(200).json(articles);
+
+    } catch (error) {
+        console.error('Error fetching article details', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
 
 
 module.exports = router;

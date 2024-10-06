@@ -2,6 +2,10 @@ import React, { useEffect, useState } from 'react'
 import NewsCard from '../NewsCard/NewsCard'
 import img1 from '../Image/e1.jpeg'
 import axios from 'axios'
+import { useRecoilValue } from 'recoil';
+import { userState } from '../../recoil/userState';
+import { useNavigate } from 'react-router-dom';
+
 
 function LatestNewsLayout() {
 
@@ -26,7 +30,32 @@ function LatestNewsLayout() {
     fetchNewsData();
 
   },[])
+
+  const user = useRecoilValue(userState);
+  const navigate = useNavigate();
+
+   // Function to handle Create Article navigation
+   const handleCreateArticle = () => {
+    navigate("/create-article");
+  };
+
   return (
+    <>
+    <div className="flex-shrink-0 flex items-center space-x-4">
+    {user.isLoggedIn && user.roleType === 'reporter' && (
+  <div>
+    <h1 className="font-semibold text-20 my-5">Will you create an article? Click here
+    <button 
+      className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 mx-3"
+      onClick={handleCreateArticle}
+    >
+      Create Article
+    </button>
+    </h1>
+  </div>
+)}
+
+          </div>
     <div className='w-full flex flex-col space-y-2 '>
       <div>
         <h2 className=' font-semibold text-slate-800 capitalize'>Latest News</h2>
@@ -43,7 +72,11 @@ function LatestNewsLayout() {
       
       
     </div>
+    </>
   )
 }
 
 export default LatestNewsLayout
+// 165
+// 132
+// 32

@@ -13,9 +13,10 @@ function NewsCardCommon({
         <div className="flex flex-col p-2" >
         <div className="  ml-0 h-[200px] items-center justify-center mx-auto news-card-wrapper w-full shadow-md  rounded-tr-md rounded-tl-md  relative bg-center bg-cover bg-no-repeat">
           <div className=" news-card-content rounded-md h-full w-full  flex flex-col bg-gradient-to-t from-slate-950 to bg-slate-400 opacity-100 ">
-             <img src={coverImageUrl} alt="" />
-
+             
             <div className="w-full absolute bottom-0 h-auto flex-col space-y-1 left-0">
+              <img src={coverImageUrl} alt="" className="max-h-[80px] w-full" />
+
               <h1 className="p-2 font-bold text-white capitalize text-[2rem]">
                 {articleItem?.newsHeading}
               </h1>

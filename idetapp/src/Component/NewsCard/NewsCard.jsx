@@ -10,8 +10,8 @@ function NewsCard({newsItem}) {
          <img src={coverImageUrl} alt="" className='w-full h-full  rounded-md relative'/>
 
           <div className='w-full absolute bottom-0 h-auto flex-col space-y-1 left-0'>
-            <h1 className='font-bold text-white capitalize text-[2rem]'>{newsItem.newsHeading}</h1>
-            <p className='text-white text-xs break-all line-clamp-2 text-ellipsis'>{newsItem.newsDescription}</p>
+            <h1 className='font-bold text- capitalize text-[2rem] text-black'>{newsItem.newsHeading}</h1>
+            <p className='text-black text-xs break-all line-clamp-2 text-ellipsis'>{newsItem.newsDescription}</p>
           </div>
 
         </div>

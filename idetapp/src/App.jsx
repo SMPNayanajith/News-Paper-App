@@ -5,11 +5,11 @@ import NewsLog from "./Component/Reporter/NewsLog";
 import Registration from "./Component/Registration/Registration";
 import { jwtDecode } from 'jwt-decode';
 import axios from "axios";
-import config from "./config";
 import { useSetRecoilState } from "recoil";
 import { userState } from "./recoil/userState";
 import { useEffect } from "react";
 import ReporterRegistration from "./Component/Registration/ReporterRegistration";
+import CreateArticle from "./Component/Reporter/CreateArticle";
 
 
 function App() {
@@ -64,10 +64,10 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} ></Route>
           <Route path="/user-login" element={<Login />} ></Route>
-          {/* <Route path="/reader" element={<NewsFeed />} ></Route> */}
           <Route path="/reporter" element={<NewsLog />} ></Route>
           <Route path="/registration" element={<Registration />} ></Route>
           <Route path="/ReporterRegistration" element={<ReporterRegistration />} ></Route>
+          <Route path="/create-article" element={<CreateArticle />} ></Route>
         </Routes>
       </BrowserRouter>
       {/* <RecoilTest/>
