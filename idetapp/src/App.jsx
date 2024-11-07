@@ -10,6 +10,8 @@ import { userState } from "./recoil/userState";
 import { useEffect } from "react";
 import ReporterRegistration from "./Component/Registration/ReporterRegistration";
 import CreateArticle from "./Component/Reporter/CreateArticle";
+import MyDetails from "./Component/MyDetails/MyDetails";
+import MyDetailsReader from "./Component/MyDetails/MyDetailsReader";
 
 
 function App() {
@@ -68,6 +70,9 @@ function App() {
           <Route path="/registration" element={<Registration />} ></Route>
           <Route path="/ReporterRegistration" element={<ReporterRegistration />} ></Route>
           <Route path="/create-article" element={<CreateArticle />} ></Route>
+          <Route path="/mydeatails" element={<MyDetails />} ></Route>
+          <Route path="/readerDetails" element={<MyDetailsReader />} ></Route>
+          
         </Routes>
       </BrowserRouter>
       {/* <RecoilTest/>

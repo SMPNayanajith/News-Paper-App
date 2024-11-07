@@ -129,7 +129,7 @@ router.post('/user-login', async(req, res) => {
         if (!isMatch) {
             return res.status(401).json({ error: 'Invalid password' });
         }
-        const token = jwt.sign({ userId: authUser._id, roleType: authUser.roleType }, process.env.JWT_SECRET, { expiresIn: '10m' });
+        const token = jwt.sign({ userId: authUser._id, roleType: authUser.roleType }, process.env.JWT_SECRET, { expiresIn: '30m' });
         const roleType = authUser.roleType;
 
         //return data
@@ -304,7 +304,7 @@ router.delete('/delete-article/:id', authMiddleware, reporterMiddleware, async(r
 
 });
 
-///Route to update DArticles and drafts
+///Route to update Articles and drafts
 
 router.put('/update-article/:id', authMiddleware, reporterMiddleware, async(req, res) => {
     const articleId = req.params.id;
@@ -472,7 +472,7 @@ router.get('/filter-articles', async(req, res) => {
 
 })
 
-//fetch articles
+//fetch latest articles
 
 router.get('/fetch-articles', async(req, res) => {
     try {
@@ -480,8 +480,8 @@ router.get('/fetch-articles', async(req, res) => {
         const latestArticle = await Articles.find().sort({ publishDate: -1 }).limit(3);
 
         //fetch all articles
-        const allAticles = await Articles.find().sort({ publishDate: -1 });
-        res.status(200).json({ latestArticle, allAticles });
+        const allArticles = await Articles.find().sort({ publishDate: -1 });
+        res.status(200).json({ latestArticle, allArticles });
 
 
     } catch (error) {
@@ -492,23 +492,54 @@ router.get('/fetch-articles', async(req, res) => {
 });
 
 
-// Fetch articles for the logged-in reporter (owner)
-router.post('/fetch-article-details', async(req, res) => {
+// Update user details method 2
+router.put('/update-user', authMiddleware, async(req, res) => {
     try {
-        const { articleIds } = req.body;
+        const { firstName, lastName, email, password, city, country, contactNumber } = req.body;
+        const { userId, roleType } = req.authUser; // getting from authMiddleware
 
-        // Find all articles that match the given IDs
-        const articles = await Articles.find({
-            _id: { $in: articleIds }
-        });
+        const authUser = await AuthUser.findById(userId);
 
-        res.status(200).json(articles);
+        if (!authUser) {
+            return res.status(404).json({ error: 'User not found' });
+        }
 
+        let user;
+        if (roleType === 'reader') {
+            user = await Reader.findByIdAndUpdate(authUser.reader);
+        } else if (roleType === 'reporter') {
+            user = await Reporter.findByIdAndUpdate(authUser.reporter);
+        }
+
+        if (!user) {
+            return res.status(404).json({ error: 'User details not found' });
+        }
+
+        // Update user fields
+        user.firstName = firstName || user.firstName;
+        user.lastName = lastName || user.lastName;
+        user.email = email || user.email;
+        user.city = city || user.city;
+        user.country = country || user.country;
+        user.contactNumber = contactNumber || user.contactNumber;
+
+        // Update password if provided
+        // if (password) {
+        //     const hashedPassword = await bcrypt.hash(password, 10);
+        //     user.password = hashedPassword;
+        // }
+
+        await user.save();
+
+        res.status(200).json({ message: 'User details updated successfully', user });
     } catch (error) {
-        console.error('Error fetching article details', error);
+        console.error('Error updating user details', error);
         res.status(500).json({ error: 'Internal server error' });
     }
 });
+
+
+
 
 
 

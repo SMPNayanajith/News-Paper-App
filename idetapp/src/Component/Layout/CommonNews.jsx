@@ -1,6 +1,5 @@
 import React from "react";
 import NewsCardCommon from "../NewsCardCommon/NewsCardCommon";
-import myImage from "../Image/s.jpeg";
 import { useRecoilValue } from "recoil";
 import { articleState } from "../../recoil/articleState";
 

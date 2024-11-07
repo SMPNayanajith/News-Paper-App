@@ -1,62 +1,61 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import axios from 'axios'
+import React, { useEffect, useState } from 'react'
+import NewsCard from '../NewsCard/NewsCard'
 
 function OwnerArticle() {
-  const [ownerArticles, setOwnerArticles] = useState([]);
 
-  // Function to fetch owner's articles
+  const [articleData, setArticleData] = useState([]) // Ensure it's initialized as an array
+  const [error, setError] = useState(null)
+
   const fetchOwnerArticles = async () => {
     try {
-      // Retrieve the token from localStorage
-      const token = localStorage.getItem('authToken');
+      const token = localStorage.getItem("authToken");
+      
       if (!token) {
-        console.error('No token found');
+        setError("No token found, please login again.");
         return;
       }
 
-      // Fetch the owner's articles using the token in the Authorization header
-      const response = await axios.get('http://localhost:3001/auth/fetch-owner-articles', {
-        headers: { Authorization: `Bearer ${token}` }
+      const response = await axios.get("http://localhost:3001/auth/fetch-articles", {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
       });
 
-      // Assuming the response contains an array of article IDs, fetch each article
-      const articleIds = response.data.articles;
-
-      if (articleIds.length > 0) {
-        // Fetch full article details using the article IDs
-        const fullArticlesResponse = await axios.post('http://localhost:3001/auth/fetch-article-details', { articleIds });
-
-        setOwnerArticles(fullArticlesResponse.data);
+      if (response.status === 200) {
+        setArticleData(Array.isArray(response.data) ? response.data : []); // Ensure data is an array
       } else {
-        console.log("No articles found for this user.");
+        setError("Failed to fetch user details.");
       }
-
+       
     } catch (error) {
-      console.error('Error fetching owner articles:', error);
+      console.error("Fetch error:", error.message);
+      setError("An error occurred while fetching articles.");
     }
-  };
+  }
 
   useEffect(() => {
-    fetchOwnerArticles();  // Fetch articles when the component mounts
+    fetchOwnerArticles();
   }, []);
 
   return (
     <div>
-      <h2>Your Articles</h2>
-      <div>
-        {ownerArticles.length > 0 ? (
-          ownerArticles.map((article, index) => (
-            <div key={index}>
-              <h3>{article.newsHeading}</h3>
-              <p>{article.newsDescription}</p>
-            </div>
-          ))
-        ) : (
-          <p>No articles found.</p>
-        )}
-      </div>
+      {error ? (
+        <p className="text-center text-red-500">{error}</p>
+      ) : (
+        <div className='w-full flex flex-col space-y-2'>
+          <div>
+            <h2 className='font-semibold text-slate-800 capitalize'>Latest News</h2>
+          </div>
+          <div className='w-full md:flex-row space-x-0 md:space-x-2 space-y-2 md:space-y-0 flex flex-col'>
+            {Array.isArray(articleData) && articleData.map((newsItem, index) => (
+              <NewsCard key={index} newsItem={newsItem} />
+            ))}
+          </div>
+        </div>
+      )}
     </div>
-  );
+  )
 }
 
 export default OwnerArticle;

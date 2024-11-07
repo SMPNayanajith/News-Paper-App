@@ -24,7 +24,7 @@ const ArrticleSchema = Yup.object().shape({
     city:Yup.string().required("Required"),  
     country:Yup.string().required("Required"),  
     // coverImage:Yup.mixed().required("Required"),  
-    publicationType: Yup.number().oneOf([1, 2, 3],"Invalid publication type").required("Required"),  
+    publicationType: Yup.number().oneOf([0,1, 2],"Invalid publication type").required("Required"),  
    
 });
 
@@ -72,6 +72,10 @@ const handleCreateArticle= async (values, {resetForm})=>{
 const toTheNewsPage = ()=>{
     navigate('/')
 }
+const toTheMyAccount=()=>{
+    navigate('/mydeatails')
+
+}
 
 
   return (
@@ -79,10 +83,11 @@ const toTheNewsPage = ()=>{
     <div className='md:mt-[95px] w-full flex flex-col justify-center items-center bg-white h-screen'>
       <div className='max-w-[800px] flex flex-col p-5 items-center mx-auto w-full '>
         <div className='app-logo flex flex-col justify-center items-center'>
-            <span className='text-[64px] text-[#627BFE] '>News@Live</span>
-            <button onClick={toTheNewsPage}> <span className='font-semibold'>To the news page</span></button>
+            <span className='text-[64px] text-[#627BFE] mt-8 '>News@Live</span>
+            <button onClick={toTheNewsPage} className='bg-slate-500  text-white px-3 py-1 rounded hover:bg-slate-800 mt-5 mx-3'> <span className='font-semibold'>To the news page</span></button>
+            <button onClick={toTheMyAccount} className='bg-slate-500  text-white px-3 py-1 rounded hover:bg-slate-800 mt-5 mx-3'> <span className='font-semibold'>My Account</span></button>
            
-            <span className='text-[18px] text-[#262626] '>Create new article</span>
+            <span className='text-[18px] text-[#262626] font-semibold mt-3'>Create new article</span>
         </div>
 
         <Formik 

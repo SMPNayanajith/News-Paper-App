@@ -5,12 +5,23 @@ import CatNav from '../CatNav/CatNav'
 import CommonNews from '../Layout/CommonNews'
 import { useEffect } from "react";
 import axios from "axios";
-import { useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { jwtDecode } from 'jwt-decode';
 import { userState } from '../../recoil/userState'
+import {  useNavigate } from 'react-router-dom'
+
 
 function Home() {
-  const setUser = useSetRecoilState(userState)
+  const setUser = useSetRecoilState(userState);
+  const user = useRecoilValue(userState);
+
+
+  const navigate = useNavigate();
+
+   // Function to handle Create Article navigation
+   const handleReaderdetails = () => {
+    navigate("/readerDetails");
+  };
 
   const fetchUserDetails = async () => {
 
@@ -60,7 +71,11 @@ function Home() {
       <div className='w-full mx-auto items-start md:w-13/12 lg:w-8/12 px-2'><LatestNewsLayout/></div>
       <div className='w-full mx-auto items-start md:w-13/12 lg:w-8/12 px-2 m-5  '><CatNav/></div>
       <div className='w-full mx-auto items-start md:w-13/12 lg:w-8/12 px-2'><CommonNews/></div>
-       
+       <div>
+        {user.isLoggedIn && user.roleType==='reader' && (
+           <button className='mb-10 bg-slate-500  text-white px-3 py-1 rounded hover:bg-slate-800 mt-5 mx-3 font-semibold' onClick={handleReaderdetails}>My Details</button>
+        )}
+       </div>
     </div>
   )
 }
