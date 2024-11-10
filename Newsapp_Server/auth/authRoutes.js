@@ -539,6 +539,19 @@ router.put('/update-user', authMiddleware, async(req, res) => {
 });
 
 
+router.get('/fetch-reporter-articles', authMiddleware, reporterMiddleware, async(req, res) => {
+    try {
+        const reporterId = req.reporter._id;
+        const reporterArticles = await Articles.find({ author: reporterId }).sort({ publishDate: -1 });
+        res.status(200).json({ reporterArticles });
+    } catch (error) {
+        console.error('Error fetching reporter articles', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+
+
 
 
 
