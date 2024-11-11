@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import NewsCard from '../NewsCard/NewsCard';
-import ArticleUpdateForm from '../ArticleUpdateForm/ArticleUpdateForm'; // Assuming you create this component for editing
+import ArticleUpdateForm from '../ArticleUpdateForm/ArticleUpdateForm';
 
 function OwnerArticle() {
   const [articleData, setArticleData] = useState([]);
@@ -84,11 +84,12 @@ function OwnerArticle() {
           <div>
             <h2 className="font-semibold text-slate-800 capitalize">My Articles</h2>
           </div>
-          <div className="w-full md:flex-row space-x-0 md:space-x-2 space-y-2 md:space-y-0 flex flex-col">
+          {/* Updated to display articles in a grid with 4 columns */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {articleData && articleData.map((newsItem, index) => (
               <div key={index} className="relative">
                 <NewsCard newsItem={newsItem} />
-                <div className="absolute top-2 right-2 flex space-x-2">
+                <div className="absolute top-2 right-1 flex flex-col space-y-2">
                   <button
                     onClick={() => deleteArticle(newsItem._id)}
                     className="px-3 py-1 bg-red-500 text-white rounded-md hover:bg-red-600"
