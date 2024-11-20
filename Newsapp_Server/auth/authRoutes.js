@@ -534,7 +534,7 @@ router.put('/update-user', authMiddleware, async(req, res) => {
         res.status(200).json({ message: 'User details updated successfully', user });
     } catch (error) {
         console.error('Error updating user details', error);
-        res.status(500).json({ error: 'Internal server error' });
+        res.status(500).json({ error: 'Internal server error' })
     }
 });
 
