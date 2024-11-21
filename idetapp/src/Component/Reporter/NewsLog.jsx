@@ -3,7 +3,7 @@ import CreateArticle from './CreateArticle'
 
 function NewsLog() {
   return (
-    <div className='w-full justify-center flex h-screen'>
+    <div className=''>
       <CreateArticle/>
     </div>
   )

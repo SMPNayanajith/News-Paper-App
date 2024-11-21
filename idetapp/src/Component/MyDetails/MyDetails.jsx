@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import OwnerArticle from '../OwnerArticle/OwnerArticle';
+import NavBar from '../NavBar/NavBar';
 
 function MyDetails() {
   const [details, setDetails] = useState({
@@ -82,6 +83,8 @@ function MyDetails() {
   }, []);
 
   return (
+    <>
+    <NavBar/>
     <div className="container mx-auto py-8 px-4">
       
       {/* Avatar */}
@@ -219,6 +222,7 @@ function MyDetails() {
         <OwnerArticle/>
       </div>
     </div>
+    </>
   );
 }
 

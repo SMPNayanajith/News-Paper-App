@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
+import NavBar from '../NavBar/NavBar';
 
 
 function MyDetailsReader() {
@@ -87,6 +88,8 @@ function MyDetailsReader() {
     },[]);
 
   return (
+    <>
+    <NavBar/>
     <div className="container mx-auto py-8 px-4">
        <div className="flex justify-center mb-6">
         <img 
@@ -178,6 +181,7 @@ function MyDetailsReader() {
       )}
       
     </div>
+    </>
   );
 }
 

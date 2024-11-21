@@ -71,11 +71,7 @@ function Home() {
       <div className='w-full mx-auto items-start md:w-13/12 lg:w-8/12 px-2'><LatestNewsLayout/></div>
       <div className='w-full mx-auto items-start md:w-13/12 lg:w-8/12 px-2 m-5  '><CatNav/></div>
       <div className='w-full mx-auto items-start md:w-13/12 lg:w-8/12 px-2'><CommonNews/></div>
-       <div>
-        {user.isLoggedIn && user.roleType==='reader' && (
-           <button className='mb-10 bg-slate-500  text-white px-3 py-1 rounded hover:bg-slate-800 mt-5 mx-3 font-semibold' onClick={handleReaderdetails}>My Details</button>
-        )}
-       </div>
+       
     </div>
   )
 }

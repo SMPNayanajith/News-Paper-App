@@ -25,7 +25,7 @@ function Logout() {
     }
 
     return (
-        <button onClick={handleLogout} className="logout-button cursor-pointer hover:text-purple-500 font-medium">
+        <button onClick={handleLogout} className="logout-button cursor-pointer hover:text-purple-500 font-medium text-slate-6       00">
             Logout
         </button>
     );

@@ -3,26 +3,20 @@ import NewsCardCommon from "../NewsCardCommon/NewsCardCommon";
 import { useRecoilValue } from "recoil";
 import { articleState } from "../../recoil/articleState";
 
-
 function CommonNews() {
+  const articleData = useRecoilValue(articleState);
+  console.log(articleData);
 
-const articleData = useRecoilValue(articleState);
-console.log(articleData)
   return (
-    <div className="w-full  flex flex-col space-y-2 ">
-      <div className="flex flex-wrap  space-x-4">
-        <div className="w-1/2 max-w  space-x-0 md:space-x-2 space-y-2 md:space-y-0 flex flex-col md:flex-row">
-        
-        {articleData && articleData?.map((articleItem,index)=>(
-          <NewsCardCommon 
-          key={index}
-          articleItem={articleItem}
-        />
-
-        ))}
-          
-          
-        </div>
+    <div className="w-full">
+      {/* Grid layout */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {articleData &&
+          articleData.map((articleItem, index) => (
+            <div key={index} className="flex justify-center">
+              <NewsCardCommon articleItem={articleItem} />
+            </div>
+          ))}
       </div>
     </div>
   );

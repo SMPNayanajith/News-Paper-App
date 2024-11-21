@@ -7,6 +7,7 @@ import config from '../../config';
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 import Button from '../Button/Button';
+import NavBar from '../NavBar/NavBar';
 
 function CreateArticle() {
     const [apiError,setApiError]=useState("");
@@ -69,24 +70,12 @@ const handleCreateArticle= async (values, {resetForm})=>{
 
 };
 
-const toTheNewsPage = ()=>{
-    navigate('/')
-}
-const toTheMyAccount=()=>{
-    navigate('/mydeatails')
-
-}
-
-
   return (
-    
-    <div className='md:mt-[95px] w-full flex flex-col justify-center items-center bg-white h-screen'>
-      <div className='max-w-[800px] flex flex-col p-5 items-center mx-auto w-full '>
+    <>
+    <NavBar/>
+    <div className=' w-full flex flex-col justify-center items-center bg-white '>
+        <div className='max-w-[800px] flex flex-col p-5 items-center mx-auto w-full '>
         <div className='app-logo flex flex-col justify-center items-center'>
-            <span className='text-[64px] text-[#627BFE] mt-8 '>News@Live</span>
-            <button onClick={toTheNewsPage} className='bg-slate-500  text-white px-3 py-1 rounded hover:bg-slate-800 mt-5 mx-3'> <span className='font-semibold'>To the news page</span></button>
-            <button onClick={toTheMyAccount} className='bg-slate-500  text-white px-3 py-1 rounded hover:bg-slate-800 mt-5 mx-3'> <span className='font-semibold'>My Account</span></button>
-           
             <span className='text-[18px] text-[#262626] font-semibold mt-3'>Create new article</span>
         </div>
 
@@ -208,6 +197,7 @@ const toTheMyAccount=()=>{
       </div>
       
     </div>
+    </>
   )
 }
 
