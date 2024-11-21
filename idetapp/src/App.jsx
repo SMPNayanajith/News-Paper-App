@@ -12,6 +12,7 @@ import ReporterRegistration from "./Component/Registration/ReporterRegistration"
 import CreateArticle from "./Component/Reporter/CreateArticle";
 import MyDetails from "./Component/MyDetails/MyDetails";
 import MyDetailsReader from "./Component/MyDetails/MyDetailsReader";
+import Footer from "./Component/Footer/Footer";
 
 
 function App() {
@@ -77,6 +78,7 @@ function App() {
       </BrowserRouter>
       {/* <RecoilTest/>
       <ChildComp/> */}
+      <Footer/>
 
     </div>
   );

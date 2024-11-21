@@ -55,9 +55,9 @@ function LatestNewsLayout() {
         )}
 
       </div>
-      <div className='w-full flex flex-col space-y-2 '>
+      <div className='w-full flex flex-col  space-y-2 my-5'>
         <div>
-          <h2 className=' font-semibold text-slate-800 capitalize'>Latest News</h2>
+          <h2 className=' font-bold text-slate-500 text-3xl  md:my-3'>Latest News</h2>
         </div>
         <div className='w-full md:flex-row space-x-0 md:space-x-2 space-y-2 md:space-y-0 flex flex-col'>
 
